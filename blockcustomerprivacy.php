@@ -43,7 +43,7 @@ class Blockcustomerprivacy extends Module
 		$this->bootstrap = true;
 		parent::__construct();
 
-		$this->displayName = $this->l('Customer data privacy block');
+		$this->displayName = $this->l('Block Customer Privacy');
 		$this->description = $this->l('Adds a block displaying a message about a customer\'s privacy data.');
 		$this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.6.99.99');
 
