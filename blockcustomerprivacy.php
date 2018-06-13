@@ -35,7 +35,7 @@ class Blockcustomerprivacy extends Module
 			$this->tab = 'front_office_features';
 		else
 			$this->tab = 'Blocks';
-		$this->version = '3.0.0';
+		$this->version = '3.0.1';
 		$this->author = 'thirty bees';
 		$this->need_instance = 0;
 
