@@ -32,7 +32,7 @@ class Blockcustomerprivacy extends Module
 	{
 		$this->name = 'blockcustomerprivacy';
 		$this->tab = 'front_office_features';
-		$this->version = '3.0.1';
+		$this->version = '3.0.2';
 		$this->author = 'thirty bees';
 		$this->need_instance = 0;
 
