@@ -23,8 +23,9 @@
  * PrestaShop is an internationally registered trademark of PrestaShop SA.
  */
 
-if (!defined('_TB_VERSION_'))
+if (!defined('_TB_VERSION_')) {
     exit;
+}
 
 class Blockcustomerprivacy extends Module
 {
@@ -67,17 +68,19 @@ class Blockcustomerprivacy extends Module
         include 'fixtures.php'; // get Fixture array
         $languages = Language::getLanguages();
         $conf_keys = array('CUSTPRIV_MSG_AUTH', 'CUSTPRIV_MSG_IDENTITY');
-        foreach ($conf_keys as $conf_key)
+        foreach ($conf_keys as $conf_key) {
             foreach ($languages as $lang) {
-                if (isset($fixtures[$conf_key][$lang['language_code']]))
+                if (isset($fixtures[$conf_key][$lang['language_code']])) {
                     Configuration::updateValue($conf_key, array(
                         $lang['id_lang'] => $fixtures[$conf_key][$lang['language_code']]
                     ));
-                else
+                } else {
                     Configuration::updateValue($conf_key, array(
                         $lang['id_lang'] => 'The personal data you provide is used to answer queries, process orders or allow access to specific information. You have the right to modify and delete all the personal information found in the "My Account" page.'
                     ));
+                }
             }
+        }
 
         return $return;
     }
@@ -105,7 +108,7 @@ class Blockcustomerprivacy extends Module
     {
         if (Tools::isSubmit('submitCustPrivMess')) {
             $message_trads = array('auth' => array(), 'identity' => array());
-            foreach ($_POST as $key => $value)
+            foreach ($_POST as $key => $value) {
                 if (preg_match('/CUSTPRIV_MSG_AUTH_/i', $key)) {
                     $id_lang = preg_split('/CUSTPRIV_MSG_AUTH_/i', $key);
                     $message_trads['auth'][(int)$id_lang[1]] = $value;
@@ -113,6 +116,7 @@ class Blockcustomerprivacy extends Module
                     $id_lang = preg_split('/CUSTPRIV_MSG_IDENTITY_/i', $key);
                     $message_trads['identity'][(int)$id_lang[1]] = $value;
                 }
+            }
             Configuration::updateValue('CUSTPRIV_MSG_AUTH', $message_trads['auth'], true);
             Configuration::updateValue('CUSTPRIV_MSG_IDENTITY', $message_trads['identity'], true);
 
@@ -138,15 +142,18 @@ class Blockcustomerprivacy extends Module
      */
     public function checkConfig($switch_key, $msg_key)
     {
-        if (!$this->active)
+        if (!$this->active) {
             return false;
+        }
 
-        if (!Configuration::get($switch_key))
+        if (!Configuration::get($switch_key)) {
             return false;
+        }
 
         $message = Configuration::get($msg_key, $this->context->language->id);
-        if (empty($message))
+        if (empty($message)) {
             return false;
+        }
 
         return true;
     }
@@ -159,11 +166,13 @@ class Blockcustomerprivacy extends Module
      */
     public function hookActionBeforeSubmitAccount($params)
     {
-        if (!$this->checkConfig('CUSTPRIV_AUTH_PAGE', 'CUSTPRIV_MSG_AUTH'))
+        if (!$this->checkConfig('CUSTPRIV_AUTH_PAGE', 'CUSTPRIV_MSG_AUTH')) {
             return;
+        }
 
-        if (!Tools::getValue('customer_privacy'))
+        if (!Tools::getValue('customer_privacy')) {
             $this->context->controller->errors[] = $this->l('If you agree to the terms in the Customer Data Privacy message, please click the check box below.');
+        }
     }
 
     /**
@@ -176,11 +185,13 @@ class Blockcustomerprivacy extends Module
      */
     public function hookCreateAccountForm($params)
     {
-        if (!$this->checkConfig('CUSTPRIV_AUTH_PAGE', 'CUSTPRIV_MSG_AUTH'))
+        if (!$this->checkConfig('CUSTPRIV_AUTH_PAGE', 'CUSTPRIV_MSG_AUTH')) {
             return;
+        }
 
-        if (!$this->isCached('blockcustomerprivacy.tpl', $this->getCacheId()))
+        if (!$this->isCached('blockcustomerprivacy.tpl', $this->getCacheId())) {
             $this->smarty->assign('privacy_message', Configuration::get('CUSTPRIV_MSG_AUTH', $this->context->language->id));
+        }
 
         return $this->display(__FILE__, 'blockcustomerprivacy.tpl', $this->getCacheId());
     }
@@ -195,8 +206,9 @@ class Blockcustomerprivacy extends Module
      */
     public function hookDisplayCustomerIdentityForm($params)
     {
-        if (!$this->checkConfig('CUSTPRIV_IDENTITY_PAGE', 'CUSTPRIV_MSG_IDENTITY'))
+        if (!$this->checkConfig('CUSTPRIV_IDENTITY_PAGE', 'CUSTPRIV_MSG_IDENTITY')) {
             return;
+        }
 
         if (!$this->isCached('blockcustomerprivacy-simple.tpl', $this->getCacheId())) {
             $this->smarty->assign(array(
@@ -313,10 +325,12 @@ class Blockcustomerprivacy extends Module
         $return['CUSTPRIV_IDENTITY_PAGE'] = (int)Configuration::get('CUSTPRIV_IDENTITY_PAGE');
 
         $languages = Language::getLanguages(false);
-        foreach ($languages as $lang)
+        foreach ($languages as $lang) {
             $return['CUSTPRIV_MSG_AUTH'][(int)$lang['id_lang']] = Tools::getValue('CUSTPRIV_MSG_AUTH_' . (int)$lang['id_lang'], Configuration::get('CUSTPRIV_MSG_AUTH', (int)$lang['id_lang']));
-        foreach ($languages as $lang)
+        }
+        foreach ($languages as $lang) {
             $return['CUSTPRIV_MSG_IDENTITY'][(int)$lang['id_lang']] = Tools::getValue('CUSTPRIV_MSG_IDENTITY_' . (int)$lang['id_lang'], Configuration::get('CUSTPRIV_MSG_IDENTITY', (int)$lang['id_lang']));
+        }
 
         return $return;
     }
