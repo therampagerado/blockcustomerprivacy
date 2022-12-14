@@ -49,8 +49,6 @@ class Blockcustomerprivacy extends Module
         $this->tb_versions_compliancy = '> 1.0.0';
         $this->tb_min_version = '1.0.0';
         $this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.6.99.99');
-
-        $this->_html = '';
     }
 
     /**
@@ -106,6 +104,7 @@ class Blockcustomerprivacy extends Module
      */
     public function getContent()
     {
+        $html = '';
         if (Tools::isSubmit('submitCustPrivMess')) {
             $message_trads = array('auth' => array(), 'identity' => array());
             foreach ($_POST as $key => $value) {
@@ -125,12 +124,12 @@ class Blockcustomerprivacy extends Module
 
             $this->_clearCache('blockcustomerprivacy.tpl');
             $this->_clearCache('blockcustomerprivacy-simple.tpl');
-            $this->_html .= $this->displayConfirmation($this->l('Configuration updated'));
+            $html .= $this->displayConfirmation($this->l('Configuration updated'));
         }
 
-        $this->_html .= $this->renderForm();
+        $html .= $this->renderForm();
 
-        return $this->_html;
+        return $html;
     }
 
     /**
